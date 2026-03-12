@@ -149,21 +149,21 @@ Evaluate system accuracy and present results.
 
 ## Minimum Requirements
 
-- Build a tax knowledge base from legal documents
-- Answer at least **15 tax-related queries correctly**
-- Simulate **5 different taxpayer scenarios**
-- Provide explanations referencing tax regulations
-- Complete system documentation and demo
+- [ ] Build a tax knowledge base from legal documents
+- [ ] Answer at least **15 tax-related queries correctly**
+- [ ] Simulate **5 different taxpayer scenarios**
+- [ ] Provide explanations referencing tax regulations
+- [ ] Complete system documentation and demo
 
 ---
 
 # Advanced Features (Bonus)
 
-- Personalized tax optimization suggestions
-- Multi-country tax system support
-- Financial planning simulations
-- Visual tax calculation breakdowns
-- Chat history and scenario tracking
+- [ ] Personalized tax optimization suggestions
+- [ ] Multi-country tax system support
+- [ ] Financial planning simulations
+- [ ] Visual tax calculation breakdowns
+- [ ] Chat history and scenario tracking
 
 ---
 
