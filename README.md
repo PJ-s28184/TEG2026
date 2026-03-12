@@ -1,4 +1,4 @@
-# Capstone Project: Interaktywny Doradca Podatkowy AI
+# Project: Interaktywny Doradca Podatkowy AI - AiTax
 
 ## What You'll Build
 An AI-powered interactive tax advisory system that helps users understand tax obligations, deductions, and reporting requirements. 
