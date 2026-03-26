@@ -1,0 +1,8 @@
+Ustawa z dnia 26 lipca 1991 r. o podatku dochodowym od osób fizycznych
+Rozdział 6: Podstawa obliczenia i wysokość podatku
+Art. 27. 1. 
+Podatek dochodowy, z zastrzeżeniem art. 29–30f, pobiera się od
+podstawy jego obliczenia według następującej skali podatkowej:
+Podstawa obliczenia podatku:
+do 120 000 złotych, 12 % minus kwota zmniejszająca podatek 3600 zł
+od 120 000 złotych, 10 800 zł + 32 % nadwyżki ponad 120 000 zł
