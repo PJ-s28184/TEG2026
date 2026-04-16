@@ -691,7 +691,7 @@ Pokazać główne możliwości i zastosowania systemu AiTax dla interaktywnego d
 |   Okres   |           Główny cel            |                Produkty finalne                  |
 |-----------|---------------------------------|--------------------------------------------------|
 | Tyg. 1-2  | Infrastruktura i baza wiedzy    | Przetworzone dokumenty, baza wektorowa           |
-| Tyg. 3-5  | Silnik RAG i Graf Wiedzy       | Działający pipeline RAG, model reguł podatkowych |
+| Tyg. 3-5  | Silnik RAG i Graf Wiedzy        | Działający pipeline RAG, model reguł podatkowych |
 | Tyg. 6-8  | Interfejs i agenci              | Conversacyjny interfejs, analiza scenariuszy     |
 | Tyg. 9-10 | Testowanie, optymalizacja, demo | Raport ewaluacyjny, demonstracja                 |
 
