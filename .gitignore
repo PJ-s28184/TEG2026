@@ -1,2 +1,8 @@
 # Zignoruj folder z źródłami danych
 data/sources
+
+# Zignoruj środowisko wirtualne
+.venv
+
+# Zignoruj Cache skryptów pythonowych
+__pycache__
