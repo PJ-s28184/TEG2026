@@ -5,16 +5,91 @@ Krawędzie = relacje (ma_parametr, rozliczana_przez, dopuszcza, wyklucza).
 """
 
 _NODES = {
-    "skala_podatkowa": {"label": "Skala podatkowa", "kind": "forma_opodatkowania"},
+    # Formy opodatkowania
+    "skala_podatkowa": {
+        "label": "Skala podatkowa",
+        "kind": "forma_opodatkowania",
+        "opis": "Progresywna skala podatkowa: 12% do 120 000 zł dochodu, 32% od nadwyżki ponad 120 000 zł. W Polsce obowiązują 2 progi podatkowe.",
+        "source": "pit-definicja-podatek-dochodowy.txt",
+    },
     "podatek_liniowy": {"label": "Podatek liniowy", "kind": "forma_opodatkowania"},
     "ryczalt": {"label": "Ryczałt ewidencjonowany", "kind": "forma_opodatkowania"},
-    "prog_120k": {"label": "Próg 120 000 zł", "kind": "parametr"},
-    "stawka_12": {"label": "Stawka 12%", "kind": "parametr"},
-    "stawka_32": {"label": "Stawka 32%", "kind": "parametr"},
+    # Parametry skali
+    "prog_120k": {
+        "label": "Próg podatkowy 120 000 zł",
+        "kind": "parametr",
+        "opis": "Pierwszy (i jedyny) próg podatkowy w skali PIT wynosi 120 000 zł. Dochód do 120 000 zł opodatkowany jest stawką 12%, powyżej – 32%.",
+        "source": "pit-definicja-podatek-dochodowy.txt",
+    },
+    "stawka_12": {
+        "label": "Stawka 12%",
+        "kind": "parametr",
+        "opis": "Stawka podatku PIT dla dochodów do 120 000 zł rocznie (minus kwota zmniejszająca podatek 3 600 zł).",
+        "source": "pit-definicja-podatek-dochodowy.txt",
+    },
+    "stawka_32": {
+        "label": "Stawka 32%",
+        "kind": "parametr",
+        "opis": "Stawka podatku PIT dla nadwyżki dochodu ponad 120 000 zł rocznie.",
+        "source": "pit-definicja-podatek-dochodowy.txt",
+    },
     "stawka_19": {"label": "Stawka 19%", "kind": "parametr"},
-    "kwota_wolna": {"label": "Kwota zmniejszająca podatek (3 600 zł)", "kind": "parametr"},
-    "ulga_internet": {"label": "Ulga internetowa", "kind": "ulga"},
-    "ulga_dzieci": {"label": "Ulga prorodzinna", "kind": "ulga"},
+    "prog_1mln": {
+        "label": "Próg daniny solidarnościowej 1 000 000 zł",
+        "kind": "parametr",
+        "opis": "Dochody przekraczające 1 000 000 zł rocznie podlegają dodatkowej daninie solidarnościowej w wysokości 4% od nadwyżki. Nie jest to oficjalny próg podatkowy, ale działa jak trzeci próg.",
+        "source": "pit-definicja-danina-solidarnościowa.txt",
+    },
+    "kwota_wolna": {
+        "label": "Kwota zmniejszająca podatek (3 600 zł)",
+        "kind": "parametr",
+        "opis": "Kwota zmniejszająca podatek w skali podatkowej wynosi 3 600 zł rocznie.",
+        "source": "pit-definicja-podatek-dochodowy.txt",
+    },
+    # Ulgi podatkowe
+    "danina_solidarnosciowa": {
+        "label": "Danina solidarnościowa (art. 30h)",
+        "kind": "danina",
+        "opis": "Dodatkowa danina w wysokości 4% od nadwyżki dochodów ponad 1 000 000 zł rocznie. Dotyczy dochodów ze skali podatkowej, podatku liniowego i innych. Technicznie nie jest progiem podatkowym, lecz oddzielną daniną — w praktyce działa jak trzeci próg.",
+        "source": "pit-definicja-danina-solidarnościowa.txt",
+    },
+    "ulga_internet": {
+        "label": "Ulga internetowa",
+        "kind": "ulga",
+        "opis": "Odliczenie wydatków na internet, max 760 zł rocznie.",
+        "source": "pit-ulga-internet.txt",
+    },
+    "ulga_dzieci": {
+        "label": "Ulga prorodzinna",
+        "kind": "ulga",
+        "opis": "Ulga na dzieci odliczana od podatku.",
+        "source": "pit-ulga-dziecko.txt",
+    },
+    "ulga_26": {
+        "label": "Ulga dla młodych (zerowy PIT, art. 21 ust. 1 pkt 148)",
+        "kind": "ulga",
+        "opis": "Zwolnienie z PIT dla podatników do 26. roku życia; przychody ze stosunku pracy, umów zlecenia i praktyk do 85 528 zł rocznie są wolne od podatku.",
+        "source": "pit-ulga-26.txt",
+    },
+    "ulga_rehabilitacja": {
+        "label": "Ulga rehabilitacyjna (art. 26 ust. 1 pkt 6)",
+        "kind": "ulga",
+        "opis": "Odliczenie wydatków na cele rehabilitacyjne oraz ułatwiające wykonywanie czynności życiowych, poniesionych przez osobę niepełnosprawną lub osobę utrzymującą osobę niepełnosprawną.",
+        "source": "pit-ulga-rehabilitacja.txt",
+    },
+    "ulga_termomodernizacja": {
+        "label": "Ulga termomodernizacyjna (art. 26h)",
+        "kind": "ulga",
+        "opis": "Odliczenie wydatków na termomodernizację budynku jednorodzinnego; limit 53 000 zł.",
+        "source": "pit-ulga-termomodernizcja.txt",
+    },
+    "ulga_rodzina_4": {
+        "label": "Ulga dla rodzin 4+ (zerowy PIT)",
+        "kind": "ulga",
+        "opis": "Zwolnienie z PIT dla rodziców co najmniej czworga dzieci; przychody do 85 528 zł rocznie są wolne od podatku.",
+        "source": "pit-ulga-rodzina-4.txt",
+    },
+    # Deklaracje
     "pit36": {"label": "PIT-36", "kind": "deklaracja"},
     "pit37": {"label": "PIT-37", "kind": "deklaracja"},
     "pit28": {"label": "PIT-28", "kind": "deklaracja"},
@@ -22,6 +97,7 @@ _NODES = {
 }
 
 _EDGES = [
+    # Skala podatkowa
     ("skala_podatkowa", "ma_parametr", "prog_120k"),
     ("skala_podatkowa", "ma_parametr", "stawka_12"),
     ("skala_podatkowa", "ma_parametr", "stawka_32"),
@@ -30,23 +106,102 @@ _EDGES = [
     ("skala_podatkowa", "rozliczana_przez", "pit36"),
     ("skala_podatkowa", "dopuszcza", "ulga_internet"),
     ("skala_podatkowa", "dopuszcza", "ulga_dzieci"),
+    ("skala_podatkowa", "dopuszcza", "ulga_26"),
+    ("skala_podatkowa", "dopuszcza", "ulga_rehabilitacja"),
+    ("skala_podatkowa", "dopuszcza", "ulga_termomodernizacja"),
+    ("skala_podatkowa", "dopuszcza", "ulga_rodzina_4"),
+    # Podatek liniowy
     ("podatek_liniowy", "ma_parametr", "stawka_19"),
     ("podatek_liniowy", "rozliczana_przez", "pit36l"),
     ("podatek_liniowy", "wyklucza", "ulga_dzieci"),
+    ("podatek_liniowy", "dopuszcza", "ulga_termomodernizacja"),
+    # Ryczałt
     ("ryczalt", "rozliczana_przez", "pit28"),
     ("ryczalt", "wyklucza", "ulga_dzieci"),
+    ("ryczalt", "dopuszcza", "ulga_rodzina_4"),
+    # Danina solidarnościowa
+    ("danina_solidarnosciowa", "ma_parametr", "prog_1mln"),
+    ("skala_podatkowa", "rozszerza", "danina_solidarnosciowa"),
+    ("podatek_liniowy", "rozszerza", "danina_solidarnosciowa"),
 ]
 
 _ALIASES = {
+    # Formy opodatkowania
     "skala": "skala_podatkowa",
     "skala podatkowa": "skala_podatkowa",
     "liniowy": "podatek_liniowy",
     "podatek liniowy": "podatek_liniowy",
     "ryczałt": "ryczalt",
     "ryczalt": "ryczalt",
+    # Progi i stawki podatkowe
+    "próg": "prog_120k",
+    "prog": "prog_120k",
+    "progi": "prog_120k",
+    "próg podatkowy": "prog_120k",
+    "progi podatkowe": "prog_120k",
+    "ile progów": "prog_120k",
+    "ile progi": "prog_120k",
+    # Danina solidarnościowa
+    "danina": "danina_solidarnosciowa",
+    "danina solidarnościowa": "danina_solidarnosciowa",
+    "danina solidarnosciowa": "danina_solidarnosciowa",
+    "solidarnościowa": "danina_solidarnosciowa",
+    "solidarnosciowa": "danina_solidarnosciowa",
+    "1000000": "danina_solidarnosciowa",
+    "1 000 000": "danina_solidarnosciowa",
+    "milion": "danina_solidarnosciowa",
+    "stawka podatku": "skala_podatkowa",
+    "stawki podatku": "skala_podatkowa",
+    "stawka pit": "skala_podatkowa",
+    "kwota wolna": "kwota_wolna",
+    "kwota zmniejszająca": "kwota_wolna",
+    "12%": "stawka_12",
+    "32%": "stawka_32",
+    "19%": "stawka_19",
+    # Ulgi - internet
     "internet": "ulga_internet",
+    "ulga internet": "ulga_internet",
+    "ulga internetowa": "ulga_internet",
+    # Ulgi - dzieci
     "dzieci": "ulga_dzieci",
     "prorodzinna": "ulga_dzieci",
+    "ulga na dzieci": "ulga_dzieci",
+    "ulga prorodzinna": "ulga_dzieci",
+    # Ulga 26 / zerowy PIT dla młodych
+    "ulga 26": "ulga_26",
+    "ulga dla mlodych": "ulga_26",
+    "ulga dla młodych": "ulga_26",
+    "zerowy pit": "ulga_26",
+    "pit zero": "ulga_26",
+    "mlodzi": "ulga_26",
+    "młodzi": "ulga_26",
+    "do 26": "ulga_26",
+    "26 lat": "ulga_26",
+    "85528": "ulga_26",
+    "85 528": "ulga_26",
+    # Ulga rehabilitacyjna
+    "rehabilitacja": "ulga_rehabilitacja",
+    "rehabilitacyjna": "ulga_rehabilitacja",
+    "ulga rehabilitacyjna": "ulga_rehabilitacja",
+    "niepelnosprawni": "ulga_rehabilitacja",
+    "niepełnosprawni": "ulga_rehabilitacja",
+    "niepelnosprawnosc": "ulga_rehabilitacja",
+    "niepełnosprawność": "ulga_rehabilitacja",
+    # Ulga termomodernizacyjna
+    "termomodernizacja": "ulga_termomodernizacja",
+    "termomodernizacyjna": "ulga_termomodernizacja",
+    "ulga termomodernizacyjna": "ulga_termomodernizacja",
+    "ocieplenie": "ulga_termomodernizacja",
+    "budynek": "ulga_termomodernizacja",
+    "53000": "ulga_termomodernizacja",
+    "53 000": "ulga_termomodernizacja",
+    # Ulga rodzina 4+
+    "rodzina 4+": "ulga_rodzina_4",
+    "rodzina 4": "ulga_rodzina_4",
+    "czworo dzieci": "ulga_rodzina_4",
+    "czwórka dzieci": "ulga_rodzina_4",
+    "ulga rodzina": "ulga_rodzina_4",
+    # Deklaracje
     "pit-37": "pit37",
     "pit-36": "pit36",
     "pit-36l": "pit36l",
@@ -88,5 +243,11 @@ def describe(keys):
             continue
         rels = neighbors(k)
         rel_str = "; ".join(f"{r} → {label}" for r, _, label in rels) or "brak powiązań"
-        lines.append(f"- {n['label']} ({n['kind']}): {rel_str}")
+        base = f"- {n['label']} ({n['kind']})"
+        if n.get("opis"):
+            base += f": {n['opis']}"
+        if n.get("source"):
+            base += f" [źródło: {n['source']}]"
+        base += f" | relacje: {rel_str}"
+        lines.append(base)
     return "\n".join(lines)
