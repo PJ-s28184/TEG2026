@@ -22,8 +22,10 @@ def skala_podatkowa(income, deductions=0):
         upper_excess = base - BRACKET_THRESHOLD
         upper_tax = upper_excess * UPPER_RATE
         tax = lower_tax + upper_tax
-        operacje.append(f"120 000 zł × 12% − 3 600 zł (kwota zmniejszająca) = {lower_tax:,.2f} zł")
-        operacje.append(f"({base:,} − 120 000) = {upper_excess:,} zł × 32% = {upper_tax:,.2f} zł")
+        operacje.append(f"Pierwszy próg: 120 000 zł × 12% = {BRACKET_THRESHOLD * LOWER_RATE:,.2f} zł")
+        operacje.append(f"− Kwota zmniejszająca podatek: {TAX_REDUCING_AMOUNT:,} zł")
+        operacje.append(f"= {lower_tax:,.2f} zł")
+        operacje.append(f"Drugi próg: ({base:,} − 120 000) = {upper_excess:,} zł × 32% = {upper_tax:,.2f} zł")
         operacje.append(f"Suma: {lower_tax:,.2f} + {upper_tax:,.2f} = {round(tax, 2):,.2f} zł")
     return {
         "metoda": "skala podatkowa (12% / 32%)",

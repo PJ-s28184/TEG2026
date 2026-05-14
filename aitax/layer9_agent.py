@@ -63,6 +63,28 @@ def _extract_profile(text):
     return profile
 
 
+def _detect_additional_reliefs(text):
+    ql = text.lower()
+    reliefs = []
+    if "internet" in ql:
+        reliefs.append(
+            "Ulga internetowa: możliwe odliczenie wydatków na internet do 760 zł rocznie [pit-ulga-internet.txt]."
+        )
+    if any(w in ql for w in ["rehabilitacja", "rehabilitacyjna", "niepełnospraw", "niepelnospraw"]):
+        reliefs.append(
+            "Ulga rehabilitacyjna: możliwe odliczenie wydatków na cele rehabilitacyjne lub związanych z ułatwieniem życia osobom niepełnosprawnym [pit-ulga-rehabilitacja.txt]."
+        )
+    if any(w in ql for w in ["termomoderniz", "ocieplenie", "budynek"]) and "internet" not in ql:
+        reliefs.append(
+            "Ulga termomodernizacyjna: możliwe odliczenie wydatków na termomodernizację budynku jednorodzinnego do 53 000 zł [pit-ulga-termomodernizcja.txt]."
+        )
+    if re.search(r"rodzina\s*4\+|rodzina\s*4|czworo\s*dzieci|co najmniej czworga dzie(c|ci)", ql):
+        reliefs.append(
+            "Ulga rodzina 4+: możliwe zwolnienie z PIT dla rodziców co najmniej czworga dzieci przy dochodach do 85 528 zł [pit-ulga-rodzina-4.txt]."
+        )
+    return reliefs
+
+
 class Advisor:
     def __init__(self, store=None):
         if store is None:
@@ -85,9 +107,11 @@ class Advisor:
             return "compare"
         calculate_triggers = [
             "ile podatku", "ile zapłacę", "ile zaplace", "ile wyniesie podatek",
+            "ile odprowadz", "odprowadzę", "odprowadzic", "odprowadzić",
             "oblicz", "policz", "wyliczyć", "wyliczy", "wylicz",
             "podatek od", "podatek wynosi", "ile wynosi podatek",
             "ile muszę zapłacić", "ile musze zaplacic",
+            "ile mam", "ile ma", "kwota podatku", "wysokość podatku",
         ]
         if any(w in ql for w in calculate_triggers):
             return "calculate"
@@ -163,6 +187,7 @@ class Advisor:
                 f"odliczenie od podatku: {child_deduction:,.2f} zł [pit-ulga-dziecko.txt]."
             )
 
+        additional_reliefs = _detect_additional_reliefs(question)
         result = layer8_tools.skala_podatkowa(income, exempt)
         podatek_po_uldze = max(0.0, round(result["podatek"] - child_deduction, 2))
         podatek_lacznie = round(podatek_po_uldze + danina, 2)
@@ -175,29 +200,48 @@ class Advisor:
         else:
             bracket_info = f"Dochód {taxable:,} zł przekracza pierwszy próg (120 000 zł) — część powyżej opodatkowana jest stawką 32%."
 
-        context_parts = ["=== WYNIK SILNIKA PODATKOWEGO ==="]
-        context_parts.append(f"Dochód brutto: {income:,} zł")
+        lines = []
+        lines.append(f"1. Dochód brutto: {income:,} zł")
         if exempt:
-            context_parts.append(f"Dochód zwolniony z PIT (ulga dla młodych): {exempt:,} zł")
-            context_parts.append(f"Dochód podlegający opodatkowaniu: {taxable:,} zł")
-        context_parts.append(f"Próg podatkowy: {bracket_info}")
-        context_parts.append("Obliczenie podatku wg skali PIT krok po kroku:")
-        context_parts.extend(f"  {krok}" for krok in result.get("operacje", []))
-        context_parts.append(f"Podatek dochodowy PIT: {result['podatek']:,.2f} zł")
-        if child_deduction:
-            context_parts.append(f"− Ulga prorodzinna ({dzieci} {'dziecko' if dzieci == 1 else 'dzieci'}): -{child_deduction:,.2f} zł")
-            context_parts.append(f"Podatek po uldze prorodzinnej: {podatek_po_uldze:,.2f} zł")
-        if danina:
-            context_parts.append(
-                f"+ Danina solidarnościowa: ({income:,} − 1 000 000) × 4% = {danina:,.2f} zł"
+            lines.append(f"   - Ulga dla młodych: {exempt:,} zł zwolniona z PIT")
+        lines.append(f"   - Dochód podlegający opodatkowaniu: {taxable:,} zł")
+        lines.append(f"   - {bracket_info}")
+        lines.append("2. Obliczenie krok po kroku:")
+        for krok in result["operacje"]:
+            lines.append(f"   {krok}")
+        relief_lines = []
+        if exempt:
+            relief_lines.append(
+                f"Ulga dla młodych: dochód do {_ULGA_26_LIMIT:,} zł zwolniony z PIT, kwota zwolnienia {exempt:,} zł [pit-ulga-26.txt]."
             )
-        context_parts.append(f">>> ŁĄCZNY PODATEK DO ZAPŁATY: {podatek_lacznie:,.2f} zł <<<")
-        if notes:
-            context_parts.append("\nZastosowane przepisy:")
-            context_parts.extend(f"- {n}" for n in notes)
-        context_parts.append("=================================")
+        if child_deduction:
+            relief_lines.append(
+                f"Ulga prorodzinna ({dzieci} {'dziecko' if dzieci == 1 else 'dzieci'}): {child_deduction:,.2f} zł"
+            )
+        if danina:
+            relief_lines.append(
+                f"Danina solidarnościowa: ({income:,} − 1 000 000) × 4% = {danina:,.2f} zł"
+            )
+        relief_lines.extend(additional_reliefs)
 
-        return self._complete(question, "\n".join(context_parts), template=layer6_prompt.USER_TEMPLATE_CALCULATE)
+        if relief_lines:
+            lines.append("")
+            lines.append("3. Ulgi / danina:")
+            for relief in relief_lines:
+                lines.append(f"   {relief}")
+            lines.append("")
+            lines.append(f"4. Podatek do zapłaty: {podatek_lacznie:,.2f} zł")
+        else:
+            lines.append("")
+            lines.append("3. Nie zastosowano żadnych ulg ani danin solidarnościowych.")
+            lines.append("")
+            lines.append(f"4. Podatek do zapłaty: {podatek_lacznie:,.2f} zł")
+        if notes:
+            lines.append("")
+            lines.append("Zastosowane przepisy:")
+            for n in notes:
+                lines.append(f"- {n}")
+        return "\n".join(lines)
 
     def _compare(self, question):
         amounts = _extract_amounts(question)
