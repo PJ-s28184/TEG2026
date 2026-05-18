@@ -5,10 +5,15 @@ Korzystasz wyłącznie z kontekstu dostarczonego przez system (fragmenty regulac
 oraz wyniki silnika podatkowego). Jeśli kontekst nie wystarcza do pewnej odpowiedzi,
 zaznacz to i zasugeruj konsultację z doradcą.
 Cytuj źródła w nawiasach kwadratowych, np. [pit-ulga-internet.txt].
-Nie wymyślaj przepisów ani stawek.
+KRYTYCZNE: cytuj WYŁĄCZNIE nazwy plików, które dosłownie pojawiają się w kontekście
+(w formacie [nazwa-pliku.txt]). NIE WOLNO Ci wymyślać ani konstruować nazw plików.
+ZAKAZ używania numerycznych przypisów [1], [2] itp. — tylko format [nazwa-pliku.txt].
+Jeśli kontekst nie zawiera żadnej nazwy pliku, nie podawaj żadnego źródła.
+Nie wymyślaj przepisów, artykułów prawnych ani stawek spoza kontekstu.
 Gdy pytanie dotyczy konkretnej ulgi, korzystaj WYŁĄCZNIE z fragmentów kontekstu
 dotyczących tej ulgi — nie łącz informacji z różnych ulg podatkowych.
 W Polsce obowiązują dwie stawki PIT: 12% (do 120 000 zł) i 32% (powyżej). Stawka 18% nie istnieje.
+Ustawa o podatku dochodowym od osób fizycznych pochodzi z dnia 26 lipca 1991 r. (nie z 2011 r.).
 """
 
 # Szablon dla pytań wyjaśniających (czym jest X, co to Y)
@@ -19,15 +24,15 @@ Kontekst (fragmenty regulacji podatkowych):
 {context}
 
 WAŻNE: W odpowiedzi MUSISZ:
-1. Podać definicję pojęcia lub wyjaśnić przepis
-2. ZAWSZE umieścić bezpośredni cytat z dokumentu (w cudzysłowie)
-3. ZAWSZE powołać artykuł prawny (np. "Art. 30h" lub "Art. 27 ust. 1")
-4. ZAWSZE podać źródło w nawiasach [nazwa-pliku.txt]
+1. Odpowiedzieć bezpośrednio na pytanie użytkownika na podstawie kontekstu
+2. Jeśli kontekst zawiera listę lub wyliczenie — przepisz ją kompletnie, nie skracaj
+3. Jeśli kontekst zawiera artykuł prawny — powołaj go (np. "Art. 30h")
+4. Jeśli kontekst zawiera nazwę pliku w formacie [plik.txt] — użyj jej jako źródła
 
-Odpowiedź powinna wyglądać następująco:
-"[cytat z dokumentu]" — Art. X, [źródło-pliku.txt]
-
-Nie wymyślaj kroków obliczeniowych. Odpowiadaj rzeczowo, oparty wyłącznie na kontekście.
+ZAKAZ: Nie podawaj nazw plików, których nie ma dosłownie w kontekście powyżej.
+ZAKAZ: Nie używaj przypisów numerycznych [1], [2] itp.
+ZAKAZ: Nie cytuj artykułów prawnych, których nie ma w kontekście.
+Odpowiadaj rzeczowo, oparty wyłącznie na kontekście.
 """
 
 # Szablon dla pytań obliczeniowych (ile zapłacę, oblicz podatek)
@@ -42,6 +47,25 @@ Na podstawie powyższego wyniku silnika podatkowego odpowiedz w następującej k
 3. Jeśli zastosowano ulgi lub daninę solidarnościową — wymień je.
 4. Podaj końcową kwotę podatku pogrubioną.
 Nie przeliczaj samodzielnie — korzystaj wyłącznie z liczb z kontekstu.
+"""
+
+# Szablon dla pytań porównawczych (ryczałt vs skala, co-jeśli)
+USER_TEMPLATE_COMPARE = """Pytanie użytkownika:
+{question}
+
+Wyniki porównania wariantów rozliczenia:
+{context}
+
+Na podstawie powyższych wyników:
+1. Przedstaw wyniki w formie tabeli markdown:
+
+| Wariant | Podstawa opodatkowania (zł) | Podatek (zł) |
+|---------|---------------------------|--------------|
+| (wypełnij na podstawie kontekstu) | ... | ... |
+
+2. Wskaż pogrubioną czcionką, który wariant jest **najkorzystniejszy** i dlaczego (1–2 zdania).
+3. Jeśli odliczenia (koszty) wpływają na wynik — wyjaśnij to krótko.
+Korzystaj wyłącznie z liczb z kontekstu. Nie przeliczaj samodzielnie.
 """
 
 # Zachowane dla kompatybilności z _compare
