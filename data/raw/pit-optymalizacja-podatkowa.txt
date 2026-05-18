@@ -1,0 +1,47 @@
+Sposoby na zmniejszenie podatku PIT — legalne metody optymalizacji podatkowej
+
+ULGI ODLICZANE OD DOCHODU (zmniejszają podstawę opodatkowania):
+
+1. Koszty uzyskania przychodów — freelancerzy i DG (art. 22 ust. 1)
+   - Rzeczywiste, udokumentowane wydatki: sprzęt, oprogramowanie, internet, biuro domowe,
+     szkolenia, transport, księgowość
+   - Brak limitu (w przeciwieństwie do pracowników etatowych)
+
+2. Składki ZUS społeczne
+   - Składki na ubezpieczenia społeczne (emerytalne, rentowe, chorobowe) odliczane od dochodu
+
+3. Ulga termomodernizacyjna (art. 26h)
+   - Do 53 000 zł odliczenia od dochodu na wydatki na termomodernizację budynku jednorodzinnego
+
+ULGI ODLICZANE OD PODATKU (zmniejszają kwotę podatku do zapłaty):
+
+4. Ulga prorodzinna (art. 27f)
+   - 1 112,04 zł rocznie na pierwsze i drugie dziecko
+   - Dostępna na skali podatkowej; niedostępna przy podatku liniowym i ryczałcie
+
+5. Ulga internetowa (art. 26 ust. 1 pkt 6a)
+   - Do 760 zł rocznie odliczenia od podatku za wydatki na internet
+   - Tylko przez dwa kolejne lata podatkowe
+
+6. Ulga rehabilitacyjna (art. 26 ust. 1 pkt 6)
+   - Odliczenie wydatków na cele rehabilitacyjne dla osób niepełnosprawnych lub ich opiekunów
+
+ZWOLNIENIA Z PODATKU (zerowy PIT):
+
+7. Ulga dla młodych — art. 21 ust. 1 pkt 148
+   - Przychody do 85 528 zł rocznie wolne od PIT dla podatników do 26. roku życia
+   - Dotyczy umów o pracę, umów zlecenia, praktyk absolwenckich
+
+8. Ulga dla rodzin 4+ — art. 21 ust. 1 pkt 153
+   - Przychody do 85 528 zł rocznie wolne od PIT dla rodziców co najmniej czworga dzieci
+
+WYBÓR FORMY OPODATKOWANIA:
+Wybór odpowiedniej formy może znacząco zmienić wysokość podatku:
+- Skala podatkowa (12%/32%): korzystna gdy niski dochód lub liczne ulgi
+- Podatek liniowy (19%): korzystny przy dochodach znacznie powyżej 120 000 zł i braku prawa do ulg
+- Ryczałt ewidencjonowany: korzystny przy niskich kosztach i niskiej stawce ryczałtu dla PKD
+
+PRZYKŁAD: Dochód 120 000 zł — porównanie:
+- Skala podatkowa: 120 000 × 12% - 3 600 = 10 800 zł
+- Podatek liniowy: 120 000 × 19% = 22 800 zł
+- Skala jest zdecydowanie korzystniejsza przy tym dochodzie
