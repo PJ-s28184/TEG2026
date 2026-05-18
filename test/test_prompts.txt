@@ -1,0 +1,42 @@
+# Test prompts — scenariusze ewaluacji zgodne z PDD (sekcja 8)
+# Format: jedna linia = jedno pytanie (linie z # są ignorowane przez test_runner)
+
+# --- Scenariusze ewaluacji (Test-1 do Test-7) ---
+
+Jakie wydatki mogą odliczyć freelancerzy?
+
+Jestem freelancerem zarabiającym 60 000 PLN rocznie. Moje wydatki to: internet (1 200 PLN), oprogramowanie (2 400 PLN), biuro domowe (3 600 PLN na amortyzację). Jaki będzie mój podatek PIT?
+
+Chcę porównać podatek dla ryczałtu 19% vs skalę podatkową dla mojego dochodu 80 000 PLN. Moje wydatki to 20 000 PLN.
+
+Wyjaśnij mi art. 21 ust. 1 pkt 148 ustawy o podatku dochodowym od osób fizycznych w prostym języku.
+
+Jakie dokumenty muszę przygotować do rocznego rozliczenia podatkowego jako samozatrudniony?
+
+Jestem nauczycielem-freelancerem zarabiającym 40 000 PLN z pracy i 25 000 PLN z freelancingu. Jakie odliczenia mogę zastosować i jaki będzie mój podatek?
+
+Mam planowane zarobić 120 000 PLN w tym roku. Czy mogę coś zrobić, aby zmniejszyć swój podatek?
+
+# --- Dodatkowe pytania (do limitu 15 wymaganych przez PDD) ---
+
+Czym jest kwota wolna od podatku?
+
+Czym jest danina solidarnościowa i od kiedy obowiązuje?
+
+Mój dochód roczny wynosi 300 000 zł. Ile odprowadzę podatku?
+
+Mój dochód roczny wynosi 3 000 000 zł. Ile odprowadzę podatku?
+
+Mam 23 lata i mam roczny dochód równy 85 000 zł. Ile odprowadzę podatku?
+
+Mam 27 lat i mam roczny dochód równy 120 000 zł. Ile odprowadzę podatku?
+
+Co to jest ulga prorodzinna i ile wynosi na jedno dziecko?
+
+Mam 2 dzieci i zarabiam 80 000 zł rocznie. Ile wyniesie mój podatek?
+
+Jakie są progi podatkowe w Polsce i jakie stawki obowiązują?
+
+Co to jest ryczałt ewidencjonowany i kiedy warto go wybrać?
+
+Ile wynosi ulga internetowa i jak ją odliczyć?
