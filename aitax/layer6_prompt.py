@@ -18,9 +18,16 @@ USER_TEMPLATE_EXPLAIN = """Pytanie użytkownika:
 Kontekst (fragmenty regulacji podatkowych):
 {context}
 
-Odpowiedz krótko i rzeczowo — wyjaśnij pojęcie lub przepis na podstawie powyższego kontekstu.
-Cytuj źródła w nawiasach kwadratowych, np. [pit-ulga-internet.txt].
-Nie wymyślaj kroków obliczeniowych ani przykładów liczbowych — jeśli pytanie jest definicyjne, tylko definiuj.
+WAŻNE: W odpowiedzi MUSISZ:
+1. Podać definicję pojęcia lub wyjaśnić przepis
+2. ZAWSZE umieścić bezpośredni cytat z dokumentu (w cudzysłowie)
+3. ZAWSZE powołać artykuł prawny (np. "Art. 30h" lub "Art. 27 ust. 1")
+4. ZAWSZE podać źródło w nawiasach [nazwa-pliku.txt]
+
+Odpowiedź powinna wyglądać następująco:
+"[cytat z dokumentu]" — Art. X, [źródło-pliku.txt]
+
+Nie wymyślaj kroków obliczeniowych. Odpowiadaj rzeczowo, oparty wyłącznie na kontekście.
 """
 
 # Szablon dla pytań obliczeniowych (ile zapłacę, oblicz podatek)
