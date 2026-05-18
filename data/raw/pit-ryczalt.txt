@@ -1,0 +1,40 @@
+Ustawa z dnia 20 listopada 1998 r. o zryczałtowanym podatku dochodowym od niektórych przychodów osiąganych przez osoby fizyczne
+
+RYCZAŁT EWIDENCJONOWANY — DEFINICJA I ZASADY
+
+Ryczałt ewidencjonowany to uproszczona forma opodatkowania przychodów z działalności gospodarczej oraz najmu. Podatek obliczany jest od przychodu (bez odliczania kosztów uzyskania przychodów). Rozliczany na formularzu PIT-28.
+
+KIEDY WARTO WYBRAĆ RYCZAŁT:
+- Gdy rzeczywiste koszty działalności są niskie (np. praca umysłowa, IT, doradztwo)
+- Gdy stawka ryczałtu dla danego PKD jest niska (np. 8,5% lub 12%)
+- Gdy uproszczenie księgowości jest priorytetem
+
+KIEDY RYCZAŁT NIE JEST KORZYSTNY:
+- Gdy koszty są wysokie (np. produkcja, handel) — nie można ich odliczyć
+- Gdy podatnik chce skorzystać z ulgi prorodzinnej (wykluczona przy ryczałcie)
+
+STAWKI RYCZAŁTU (wybrane):
+- 2% — sprzedaż produktów rolnych i hodowlanych
+- 3% — działalność gastronomiczna, handel detaliczny, usługi budowlane
+- 5,5% — roboty budowlane, działalność wytwórcza
+- 8,5% — usługi (m.in. najem prywatny do 100 000 zł), wolne zawody (do 2022)
+- 12% — usługi IT i programowanie (od 2022 r.), świadczenie usług w zakresie technologii
+- 14% — usługi w zakresie opieki zdrowotnej, usługi architektoniczne i inżynierskie
+- 15% — usługi pośrednictwa w handlu, reklamowe
+- 17% — wolne zawody (lekarze, prawnicy, doradcy — od 2022 r.)
+
+LIMIT PRZYCHODÓW:
+Ryczałt można stosować, jeśli przychody w poprzednim roku nie przekroczyły 2 000 000 euro. Przekroczenie limitu oznacza obowiązek przejścia na zasady ogólne (skalę podatkową lub podatek liniowy).
+
+EWIDENCJA PRZYCHODÓW:
+Podatnik zobowiązany jest prowadzić ewidencję przychodów — prostszą niż KPiR stosowana przy skali podatkowej lub podatku liniowym.
+
+ULGI DOSTĘPNE PRZY RYCZAŁCIE:
+- Ulga dla rodzin 4+ (zerowy PIT do 85 528 zł)
+- Ulga dla seniorów (zerowy PIT do 85 528 zł)
+- Ulga dla powracających z zagranicy
+- Odliczenie składek ZUS społecznych od przychodu
+NIE MOŻNA stosować: ulgi prorodzinnej (na dzieci), ulgi rehabilitacyjnej od podatku
+
+TERMIN WYBORU FORMY OPODATKOWANIA:
+Decyzję o wyborze ryczałtu należy zgłosić do urzędu skarbowego do 20. dnia miesiąca następującego po miesiącu, w którym uzyskano pierwszy przychód z działalności w danym roku podatkowym.

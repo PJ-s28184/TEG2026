@@ -10,11 +10,29 @@ INTERNET_DEDUCTION_CAP = 760
 
 def skala_podatkowa(income, deductions=0):
     base = max(0, income - deductions)
+    operacje = []
     if base <= BRACKET_THRESHOLD:
-        tax = base * LOWER_RATE - TAX_REDUCING_AMOUNT
+        tax_raw = base * LOWER_RATE - TAX_REDUCING_AMOUNT
+        tax = max(0, tax_raw)
+        operacje.append(f"{base:,} zł × 12% = {base * LOWER_RATE:,.2f} zł")
+        operacje.append(f"− kwota zmniejszająca podatek: {TAX_REDUCING_AMOUNT:,} zł")
+        operacje.append(f"= {tax:,.2f} zł")
     else:
-        tax = 10_800 + (base - BRACKET_THRESHOLD) * UPPER_RATE
-    return {"metoda": "skala podatkowa (12% / 32%)", "podstawa": base, "podatek": max(0, round(tax, 2))}
+        lower_tax = BRACKET_THRESHOLD * LOWER_RATE - TAX_REDUCING_AMOUNT  # 10 800
+        upper_excess = base - BRACKET_THRESHOLD
+        upper_tax = upper_excess * UPPER_RATE
+        tax = lower_tax + upper_tax
+        operacje.append(f"Pierwszy próg: 120 000 zł × 12% = {BRACKET_THRESHOLD * LOWER_RATE:,.2f} zł")
+        operacje.append(f"− Kwota zmniejszająca podatek: {TAX_REDUCING_AMOUNT:,} zł")
+        operacje.append(f"= {lower_tax:,.2f} zł")
+        operacje.append(f"Drugi próg: ({base:,} − 120 000) = {upper_excess:,} zł × 32% = {upper_tax:,.2f} zł")
+        operacje.append(f"Suma: {lower_tax:,.2f} + {upper_tax:,.2f} = {round(tax, 2):,.2f} zł")
+    return {
+        "metoda": "skala podatkowa (12% / 32%)",
+        "podstawa": base,
+        "podatek": round(tax, 2),
+        "operacje": operacje,
+    }
 
 
 def podatek_liniowy(income, deductions=0):

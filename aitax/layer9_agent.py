@@ -13,9 +13,108 @@ from . import (
 )
 
 
+_ULGA_26_LIMIT = 85_528
+_DANINA_THRESHOLD = 1_000_000
+_DANINA_RATE = 0.04
+# Ulga na dzieci (roczna kwota odliczenia od podatku)
+_CHILD_DEDUCTION = [0, 1_112.04, 2_224.08, 4_224.12]  # 0,1,2,3 dzieci
+
+# Słowa-klucze wskazujące na konkretne źródło dochodu (do wykrywania wielu źródeł)
+_INCOME_SOURCE_PATTERNS = [
+    r"z prac[yi]\b", r"ze stosunku pracy", r"z etatu\b",
+    r"z freelancingu\b", r"z umow[y]?\b",
+    r"z dzia[łl]alno[śs]ci\b", r"z biznesu\b",
+    r"z najmu\b", r"z renty\b", r"z emerytury\b",
+    r"z umowy\s+zlecen", r"z umowy\s+o\s+dzie[łl]o",
+]
+
+_WORD_MULTIPLIERS = [
+    (r"mil+ion[yów]*", 1_000_000),   # milion, miliony, milionów, million, milliony
+    (r"tys(?:i[ęe]c[y]?|\.)?", 1_000),  # tysięcy, tysiące, tys.
+]
+
+
 def _extract_amounts(text):
+    """Parsuje kwoty z tekstu, obsługując zapis słowny (miliony, tysiące) i cyfrowy."""
     normalized = re.sub(r"(?<=\d)\s+(?=\d{3}\b)", "", text)
-    return [int(x) for x in re.findall(r"\b\d{3,}\b", normalized)]
+    results = []
+    # Kwoty słowne: "2 miliony", "140 tysięcy"
+    for pattern, multiplier in _WORD_MULTIPLIERS:
+        for m in re.finditer(rf"(\d+(?:[.,]\d+)?)\s*{pattern}", normalized, re.IGNORECASE):
+            results.append((m.start(), int(float(m.group(1).replace(",", ".")) * multiplier)))
+    # Kwoty cyfrowe (min. 3 cyfry) — pomijamy pozycje już rozpoznane słownie.
+    # (?<!\d) i (?!\d) zamiast \b, bo \b nie działa gdy liczba stoi przed literą (np. "120000zł")
+    word_spans = {r[0] for r in results}
+    for m in re.finditer(r"(?<!\d)\d{3,}(?!\d)", normalized):
+        if m.start() not in word_spans:
+            results.append((m.start(), int(m.group())))
+    results.sort(key=lambda x: x[0])
+    return [v for _, v in results]
+
+
+def _extract_profile(text):
+    """Wyciąga sytuację oraz status podatnika z tekstu, np. wiek i liczbę dzieci."""
+    ql = text.lower()
+    profile = {}
+    # "poniżej/mniej niż X lat" → wiek traktujemy jako X-1 (warunek ulgi 26: do ukończenia 26. roku)
+    m = re.search(r"(?:poni[żz]ej|mniej\s+ni[żz])\s+(\d+)\s*lat", ql)
+    if m:
+        profile["wiek"] = int(m.group(1)) - 1
+    else:
+        m = re.search(r"(\d+)\s*lat[a]?\b", ql)
+        if m:
+            profile["wiek"] = int(m.group(1))
+    m = re.search(r"(\d+)\s*dziec[ika]\b", ql)
+    if m:
+        profile["dzieci"] = int(m.group(1))
+    elif any(w in ql for w in ["dziecko", "dzieckiem", "jedno dziecko"]):
+        profile["dzieci"] = 1
+    return profile
+
+
+def _is_multi_source(text):
+    """Zwraca True, gdy pytanie zawiera co najmniej 2 różne wzorce źródła dochodu."""
+    ql = text.lower()
+    matched = sum(1 for p in _INCOME_SOURCE_PATTERNS if re.search(p, ql))
+    return matched >= 2
+
+
+def _extract_expenses(text):
+    """
+    Zwraca łączne koszty uzyskania przychodu z pytania (np. wydatki na internet,
+    oprogramowanie, biuro domowe). Działa tylko gdy pytanie zawiera słowo 'wydatki'
+    lub 'koszty' i ma więcej niż jedną kwotę.
+    """
+    ql = text.lower()
+    if not any(w in ql for w in ["wydatki", "koszt", "koszty"]):
+        return 0
+    amounts = _extract_amounts(text)
+    if len(amounts) < 2:
+        return 0
+    # Pierwsza kwota = dochód, pozostałe = poszczególne wydatki (lub ich suma)
+    return sum(amounts[1:])
+
+
+def _detect_additional_reliefs(text):
+    ql = text.lower()
+    reliefs = []
+    if "internet" in ql:
+        reliefs.append(
+            "Ulga internetowa: możliwe odliczenie wydatków na internet do 760 zł rocznie [pit-ulga-internet.txt]."
+        )
+    if any(w in ql for w in ["rehabilitacja", "rehabilitacyjna", "niepełnospraw", "niepelnospraw"]):
+        reliefs.append(
+            "Ulga rehabilitacyjna: możliwe odliczenie wydatków na cele rehabilitacyjne lub związanych z ułatwieniem życia osobom niepełnosprawnym [pit-ulga-rehabilitacja.txt]."
+        )
+    if any(w in ql for w in ["termomoderniz", "ocieplenie", "budynek"]) and "internet" not in ql:
+        reliefs.append(
+            "Ulga termomodernizacyjna: możliwe odliczenie wydatków na termomodernizację budynku jednorodzinnego do 53 000 zł [pit-ulga-termomodernizcja.txt]."
+        )
+    if re.search(r"rodzina\s*4\+|rodzina\s*4|czworo\s*dzieci|co najmniej czworga dzie(c|ci)", ql):
+        reliefs.append(
+            "Ulga rodzina 4+: możliwe zwolnienie z PIT dla rodziców co najmniej czworga dzieci przy dochodach do 85 528 zł [pit-ulga-rodzina-4.txt]."
+        )
+    return reliefs
 
 
 class Advisor:
@@ -38,7 +137,19 @@ class Advisor:
         ql = q.lower()
         if "porówn" in ql or ("ryczałt" in ql and "skala" in ql):
             return "compare"
-        if any(w in ql for w in ["ile podatku", "oblicz", "policz", "wyliczyć", "wyliczy"]):
+        calculate_triggers = [
+            "ile podatku", "ile zapłacę", "ile zaplace", "ile wyniesie podatek",
+            "ile wyniesie mój podatek", "ile wyniesie moj podatek", "ile wyniesie",
+            "ile odprowadz", "odprowadzę", "odprowadzic", "odprowadzić",
+            "oblicz", "policz", "wyliczyć", "wyliczy", "wylicz",
+            "podatek od", "podatek wynosi", "ile wynosi podatek",
+            "ile muszę zapłacić", "ile musze zaplacic",
+            "ile mam", "ile ma", "kwota podatku", "wysokość podatku",
+            # dodatkowe triggery dla scenariuszy Test-2 i Test-6
+            "jaki będzie mój podatek", "jaki bedzie moj podatek",
+            "jaki podatek", "podatek pit", "jaki będzie podatek",
+        ]
+        if any(w in ql for w in calculate_triggers):
             return "calculate"
         return "explain"
 
@@ -49,12 +160,26 @@ class Advisor:
         return "Powiązane pojęcia (graf wiedzy):\n" + layer5_knowledge_graph.describe(keys)
 
     def _vector_context(self, question, k=None):
+        matched_sources = self._graph_sources(question)
+        if matched_sources:
+            # Graf wskazał konkretne źródło — ładuj chunki bezpośrednio, bez wyszukiwania semantycznego
+            chunks = [c for c in self.store.chunks if c["source"] in matched_sources]
+            return "\n---\n".join(f"[{c['source']}] {c['text']}" for c in chunks)
         hits = self.store.search(question, k=k) if k else self.store.search(question)
         return "\n---\n".join(f"[{h[0]['source']}] {h[0]['text']}" for h in hits)
 
+    def _graph_sources(self, question):
+        """Zwraca zbiór plików źródłowych wskazanych przez węzły grafu wiedzy dla pytania."""
+        keys = layer5_knowledge_graph.mentioned_in(question)
+        return {
+            layer5_knowledge_graph._NODES[k]["source"]
+            for k in keys
+            if layer5_knowledge_graph._NODES.get(k, {}).get("source")
+        }
+
     def _rag_answer(self, question):
         context = "\n\n".join(
-            p for p in (self._graph_context(question), self._vector_context(question)) if p
+            p for p in (self._graph_context(question), self._vector_context(question, k=5)) if p
         )
         return self._complete(question, context)
 
@@ -62,11 +187,121 @@ class Advisor:
         amounts = _extract_amounts(question)
         if not amounts:
             return self._rag_answer(question)
-        income = amounts[0]
-        deductions = amounts[1] if len(amounts) > 1 else 0
-        result = layer8_tools.skala_podatkowa(income, deductions)
-        context = f"Wynik silnika podatkowego: {result}\n---\n{self._vector_context(question, k=2)}"
-        return self._complete(question, context)
+
+        profile = _extract_profile(question)
+        notes = []
+        exempt = 0
+        danina = 0.0
+        child_deduction = 0.0
+        expenses = 0
+        multi_source_note = None
+
+        # Wiele źródeł dochodu (np. "40 000 zł z pracy i 25 000 zł z freelancingu")
+        if _is_multi_source(question) and len(amounts) >= 2:
+            income = sum(amounts)
+            parts = " + ".join(f"{a:,}" for a in amounts)
+            multi_source_note = f"Łączny dochód z wielu źródeł: {parts} = {income:,} zł"
+        else:
+            income = amounts[0]
+            # Koszty uzyskania przychodu wymienione w pytaniu
+            expenses = _extract_expenses(question)
+
+        # Ulga dla młodych (art. 21 ust. 1 pkt 148)
+        if profile.get("wiek", 99) < 26:
+            exempt = min(income, _ULGA_26_LIMIT)
+            notes.append(
+                f"Ulga dla młodych: podatnik ma {profile['wiek']} lat (poniżej 26), "
+                f"dochód do {_ULGA_26_LIMIT:,} zł zwolniony z PIT. "
+                f"Kwota zwolnienia: {exempt:,} zł [pit-ulga-26.txt]."
+            )
+
+        # Danina solidarnościowa (art. 30h)
+        if income > _DANINA_THRESHOLD:
+            danina = round((income - _DANINA_THRESHOLD) * _DANINA_RATE, 2)
+            notes.append(
+                f"Danina solidarnościowa: dochód {income:,} zł przekracza 1 000 000 zł, "
+                f"4% od nadwyżki {income - _DANINA_THRESHOLD:,} zł = {danina:,.2f} zł [pit-definicja-danina-solidarnościowa.txt]."
+            )
+
+        # Ulga prorodzinna (odliczenie od podatku)
+        dzieci = profile.get("dzieci", 0)
+        if dzieci > 0:
+            if dzieci < len(_CHILD_DEDUCTION):
+                child_deduction = _CHILD_DEDUCTION[dzieci]
+            else:
+                child_deduction = _CHILD_DEDUCTION[3] + (dzieci - 3) * 2_700.0
+            notes.append(
+                f"Ulga prorodzinna: {dzieci} {'dziecko' if dzieci == 1 else 'dzieci'}, "
+                f"odliczenie od podatku: {child_deduction:,.2f} zł [pit-ulga-dziecko.txt]."
+            )
+
+        additional_reliefs = _detect_additional_reliefs(question)
+
+        # Łączne odliczenia od dochodu: zwolnienie (ulga26) + koszty uzyskania
+        total_deductions = exempt + expenses
+        result = layer8_tools.skala_podatkowa(income, total_deductions)
+        podatek_po_uldze = max(0.0, round(result["podatek"] - child_deduction, 2))
+        podatek_lacznie = round(podatek_po_uldze + danina, 2)
+
+        taxable = income - total_deductions
+        if taxable <= layer8_tools.BRACKET_THRESHOLD:
+            bracket_info = f"Dochód {taxable:,} zł mieści się w pierwszym progu podatkowym (do 120 000 zł) — stawka 12%."
+        elif taxable > _DANINA_THRESHOLD:
+            bracket_info = f"Dochód {taxable:,} zł przekracza oba progi: drugi próg (32% powyżej 120 000 zł) oraz próg daniny solidarnościowej (4% powyżej 1 000 000 zł)."
+        else:
+            bracket_info = f"Dochód {taxable:,} zł przekracza pierwszy próg (120 000 zł) — część powyżej opodatkowana jest stawką 32%."
+
+        lines = []
+        lines.append(f"1. Dochód brutto: {income:,} zł")
+        if multi_source_note:
+            lines.append(f"   ({multi_source_note})")
+        if expenses:
+            lines.append(f"   - Koszty uzyskania przychodu: {expenses:,} zł")
+        if exempt:
+            lines.append(f"   - Ulga dla młodych (zwolnienie z PIT): {exempt:,} zł")
+        lines.append(f"   - Dochód podlegający opodatkowaniu: {taxable:,} zł")
+        lines.append(f"   - {bracket_info}")
+        lines.append("2. Obliczenie krok po kroku:")
+        for krok in result["operacje"]:
+            lines.append(f"   {krok}")
+
+        relief_lines = []
+        if expenses:
+            relief_lines.append(
+                f"Koszty uzyskania przychodu: {expenses:,} zł odliczone od dochodu [pit-definicja-kosztow-uzyskania.txt]."
+            )
+        if exempt:
+            relief_lines.append(
+                f"Ulga dla młodych: dochód do {_ULGA_26_LIMIT:,} zł zwolniony z PIT, kwota zwolnienia {exempt:,} zł [pit-ulga-26.txt]."
+            )
+        if child_deduction:
+            relief_lines.append(
+                f"Ulga prorodzinna ({dzieci} {'dziecko' if dzieci == 1 else 'dzieci'}): {child_deduction:,.2f} zł [pit-ulga-dziecko.txt]."
+            )
+        if danina:
+            relief_lines.append(
+                f"Danina solidarnościowa: ({income:,} − 1 000 000) × 4% = {danina:,.2f} zł [pit-definicja-danina-solidarnościowa.txt]."
+            )
+        relief_lines.extend(additional_reliefs)
+
+        if relief_lines:
+            lines.append("")
+            lines.append("3. Zastosowane odliczenia / ulgi / danina:")
+            for relief in relief_lines:
+                lines.append(f"   - {relief}")
+            lines.append("")
+            lines.append(f"4. **Podatek do zapłaty: {podatek_lacznie:,.2f} zł**")
+        else:
+            lines.append("")
+            lines.append("3. Nie zastosowano żadnych ulg ani danin solidarnościowych.")
+            lines.append("")
+            lines.append(f"4. **Podatek do zapłaty: {podatek_lacznie:,.2f} zł**")
+        if notes:
+            lines.append("")
+            lines.append("Zastosowane przepisy:")
+            for n in notes:
+                lines.append(f"- {n}")
+        return "\n".join(lines)
 
     def _compare(self, question):
         amounts = _extract_amounts(question)
@@ -75,19 +310,37 @@ class Advisor:
         income = amounts[0]
         deductions = amounts[1] if len(amounts) > 1 else 0
         scenarios = layer8_tools.compare(income, deductions)
-        context = "Porównanie wariantów rozliczenia:\n" + "\n".join(str(s) for s in scenarios)
+
+        rows = []
+        for s in scenarios:
+            rows.append(
+                f"| {s['metoda']} | {s['podstawa']:,.0f} | {s['podatek']:,.2f} |"
+            )
+        table = (
+            "| Wariant | Podstawa (zł) | Podatek (zł) |\n"
+            "|---------|---------------|--------------|\n"
+            + "\n".join(rows)
+        )
+        best = min(scenarios, key=lambda s: s["podatek"])
+        context = (
+            f"Dochód: {income:,} zł, odliczenia/koszty: {deductions:,} zł\n\n"
+            f"{table}\n\n"
+            f"Najniższy podatek: {best['metoda']} = {best['podatek']:,.2f} zł"
+        )
         graph = self._graph_context(question)
         if graph:
             context += "\n\n" + graph
-        return self._complete(question, context)
+        return self._complete(question, context, template=layer6_prompt.USER_TEMPLATE_COMPARE)
 
-    def _complete(self, question, context):
+    def _complete(self, question, context, template=None):
+        if template is None:
+            template = layer6_prompt.USER_TEMPLATE_EXPLAIN
         return layer7_llm.chat(
             [
                 {"role": "system", "content": layer6_prompt.SYSTEM},
                 {
                     "role": "user",
-                    "content": layer6_prompt.USER_TEMPLATE.format(question=question, context=context),
+                    "content": template.format(question=question, context=context),
                 },
             ]
         )

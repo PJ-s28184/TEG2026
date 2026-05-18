@@ -1,0 +1,48 @@
+Dokumenty potrzebne do rocznego rozliczenia PIT — samozatrudnieni i freelancerzy
+
+OBOWIĄZKOWE DOKUMENTY DO ZŁOŻENIA PIT
+
+1. Formularz rocznej deklaracji podatkowej
+   - PIT-36 (skala podatkowa, działalność gospodarcza)
+   - PIT-36L (podatek liniowy 19%, działalność gospodarcza)
+   - PIT-28 (ryczałt ewidencjonowany)
+   - Termin złożenia: do 30 kwietnia roku następnego (np. za 2024 r. — do 30 kwietnia 2025 r.)
+
+2. Dokumenty przychodów
+   - Faktury VAT lub rachunki wystawione przez podatnika (przychód z DG)
+   - PIT-11 od pracodawcy lub zleceniodawcy (jeśli dotyczy)
+   - PIT-8C (przychody z innych źródeł, np. sprzedaż papierów wartościowych)
+   - Ewidencja przychodów (obowiązkowa przy ryczałcie)
+   - Podatkowa Księga Przychodów i Rozchodów (KPiR) lub księgi rachunkowe (przy skali/liniowym)
+
+3. Dokumenty kosztów uzyskania przychodów (DG na skali lub liniowym)
+   - Faktury VAT zakupu za sprzęt, oprogramowanie, usługi
+   - Rachunki i paragony z NIP
+   - Umowy leasingowe (jeśli dotyczy pojazdów lub sprzętu)
+   - Dokumenty potwierdzające składki ZUS (ZUS DRA lub potwierdzenia przelewów)
+
+4. Dokumenty składek ZUS
+   - Potwierdzenia zapłaty składek na ubezpieczenia społeczne (odliczane od dochodu)
+   - Potwierdzenia zapłaty składki zdrowotnej (zasady odliczenia zależą od formy opodatkowania)
+   - Deklaracje ZUS DRA za każdy miesiąc roku podatkowego
+
+5. Dokumenty do ulg podatkowych (jeśli podatnik z nich korzysta)
+   - Ulga internetowa: faktury za internet za dwa kolejne lata podatkowe (max 760 zł/rok)
+   - Ulga prorodzinna: akty urodzenia dzieci, zaświadczenie o uczęszczaniu do szkoły (dzieci powyżej 18 r.ż.)
+   - Ulga rehabilitacyjna: orzeczenie o niepełnosprawności, faktury za wydatki rehabilitacyjne
+   - Ulga termomodernizacyjna: faktury za materiały i usługi termomodernizacyjne
+   - Ulga dla młodych (zerowy PIT do 26 r.ż.): zaświadczenie o wieku (wbudowane w PIT-11)
+
+6. Dokumenty dla rozliczeń wspólnych
+   - Przy rozliczeniu wspólnym z małżonkiem: dane małżonka (PESEL, NIP), jego dochody
+   - Przy rozliczeniu jako osoba samotnie wychowująca dziecko: odpowiednie zaświadczenia
+
+WAŻNE TERMINY
+- 15 lutego — wysyłka PIT-11 przez pracodawcę/zleceniodawcę
+- 30 kwietnia — ostateczny termin złożenia PIT i zapłaty podatku
+- Płatność zaliczkowa — miesięcznie lub kwartalnie przez cały rok podatkowy
+
+SPOSÓB SKŁADANIA
+- Elektronicznie przez e-Urząd Skarbowy (podatki.gov.pl) — bezpłatnie, bez podpisu kwalifikowanego
+- Usługa Twój e-PIT — automatycznie wypełniony formularz dostępny od 15 lutego
+- Papierowo — osobiście w urzędzie skarbowym lub listem poleconym (termin: data stempla pocztowego)
